@@ -60,6 +60,7 @@ class Program_Window:
     def __init__(self):
         self.ProgWindow = tk.Toplevel()
         self.top_frame = tk.Frame(self.ProgWindow)
+        self.middle_frame = tk.Frame(self.ProgWindow)
         self.bottom_frame = tk.Frame(self.ProgWindow)
         self.ProgWindow.title('System Agnostic Initiative Tracker')
 
@@ -132,15 +133,143 @@ class Program_Window:
     #--------------------------------------------------------------------------------------------
     #
     # This will calculate the messages and then it will display the initiatives in order. It will
-    # get the necessary stats, and then it will roll the random dice, adding the initiative
+    # get the necessary stats, an  then it will roll the random dice, adding the initiative
     # modifier. Getting values from Tkinter interfaces can be a little tricky, but it is not
     # impossible.
     #
     #---------------------------------------------------------------------------------------------
     def calculate(self):
-        pass
+        x = 1
+        player_list = []
+        
+
+        # This is a kludge because the initial design was poor. I will, if I pursue this project,
+        # convet the initial items into a list. For now, this is just being
+
+        #Let's see if they set the variables. If they're not set, print an erro message
+        # and return 
+        try:
+            loopcounter = int(self.diceNumberEntry.get())
+            dieType = int(self.diceSidesEntry.get())
+        except:
+            tkinter.messagebox.showinfo("Warining!", "You must set both the die type and number of sides.")
+            return
+        
+        record = []
+
+        while (x <= 5):
+            
+            initiative = 0
+            if x == 1: 
+                try:
+                    name = self.iniText1.get()
+                    modifier = int(self.iniModText1.get())
+                except:
+                    return  # This assumes the user didn't put anything after this
+    
+
+            if x == 2:
+                try:
+                    name = self.iniText2.get()
+                    modifier = int(self.iniModText2.get())
+                except: 
+                    break
+                
+            if x == 3:
+                try:
+                    name = self.iniText3.get()
+                    modifier = int(self.iniModText3.get())
+                except: 
+                    break
+
+             
+            if x == 4:
+                try:
+                    name = self.iniText4.get()
+                    modifier = int(self.iniModText4.get())
+                except: 
+                    break
+
+            if x == 5:
+                try:
+                    name = self.iniText5.get()
+                    modifier = int(self.iniModText5.get())
+                except: 
+                    break
+
+            for i in range(0, loopcounter):
+                initiative = initiative + rnd.randint(0,dieType) + modifier
+                print (initiative)
+
+            record.append([name,initiative])            
+            x += 1
+
+        
+        # Let's just do bubble sort here, because with the small volume
+        # of likely items, bubble sort is actually more efficient than
+        # some of the more complex sorting algorithms, even though its
+        # O(n**2)
+        tuple_to_sort = ""
+        tuple2_to_sort = ""
        
-#================================================================================================
+        
+
+        for i in range(len(record)):
+            swapped = False
+            for j in range(len(record) - i - 1):
+                int1 = record[j]    
+                int2 = record[j+1]
+                
+                if int1[1] == int2[1]:
+                   continue 
+                if int1[1] < int2[1]:
+                    record[j], record[j+1] = record[j+1], record[j]
+                    swapped = True
+        
+                if not swapped:
+                    break
+            
+        
+        print(record)
+                  
+        # Again, I know this is a kludge as a reuslt of bad initial design.
+        try:
+            if (record[0]):
+                self.resultsLabel1 = tk.Label(text=str(record[0]), padx=5, pady=5)
+                self.resultsLabel1.grid(row =6, column=0)
+        except:
+            pass
+    
+        try:
+            if (record[1]):
+                self.resultsLabel2 = tk.Label(text=str(record[1]), padx=5, pady=5)
+                self.resultsLabel2.grid(row=7, column=0)
+        except:
+            pass
+    
+        try:
+            if (record[2]):
+                self.resultsLabel3 = tk.Label(text=str(record[2]), padx=5, pady=5)
+                self.resultsLabel3.grid(row=8, column=0)
+        except:
+            pass
+        
+        try:
+            if (record[3]):
+                self.resultsLabel4 = tk.Label(text=str(record[3]), padx=5, pady=5)
+                self.resultsLabel4.grid(row=9, column=0)
+        except:
+            pass
+    
+        try:
+            if (record[4]):
+                self.resultsLabel5 = tk.Label(text=str(record[4]), padx=5, pady=5)
+                self.resultsLabel5.grid(row=10, column=0)
+        except: 
+            pass
+    
+            
+##===============================================================================================
 #
 # THIS IS  THE MAIN FUNCTION. THIS IS THE MAIN FUNCTION. THIS IS THE MAIN FUNCTION. THIS IS THE
 #
